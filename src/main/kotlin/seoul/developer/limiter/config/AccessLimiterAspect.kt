@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 import seoul.developer.limiter.annotation.AccessLimiter
+import seoul.developer.limiter.error.LimitExceededException
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
@@ -31,7 +32,7 @@ class AccessLimiterAspect(
         val accessRecord = getAccessRecord(key, accessLimiter.limitMaxCount)
 
         if (accessRecord.first) {
-            throw RuntimeException()
+            throw LimitExceededException(accessLimiter.limitMaxCount)
         }
         val result = pjp.proceed()
 
